@@ -4,6 +4,8 @@ Verification run: 2026-08-31 on Cursor Cloud Agent
 `bc-382b47cb-57f0-4877-adef-96e87ec23b47` against `github.com/TakeSomeSteps/ECC`
 (`main` @ `ca185ef5`, ECC 2.2.1). This is an evidence note, not a product rewrite.
 
+**Follow-up 2026-09-01:** a fresh Cloud Agent on PR #2 (`cursor/install-cursor-ecc-agents-ab54`) still could **not** spawn ECC specialists via Task. See [Follow-up: committed `.cursor/agents` do not become Task types](#follow-up-2026-09-01-committed-cursoragents-do-not-become-task-types).
+
 ## Verdict
 
 **Not as native Cursor subagents, on this fork as committed today.**
@@ -129,3 +131,36 @@ fall back; that fallback was not executed in this run.
 Do not treat running the installer inside this ECC checkout as a substitute
 for committing `.cursor/agents/`. Cloud Agents clone the git revision; untracked
 install output dies with the VM.
+
+## Follow-up (2026-09-01): committed `.cursor/agents` do not become Task types
+
+Fresh Cloud Agent `bc-873ec428-9090-442e-8f67-e80b737d318a` on branch
+`cursor/install-cursor-ecc-agents-ab54` @ `2f4baa6f` (PR
+https://github.com/TakeSomeSteps/ECC/pull/2). This is the run the prior note
+said was still needed: files committed, new session, no mid-session writes.
+
+**Verdict: No.** Cloud Agents on this branch cannot spawn ECC specialists via
+Task.
+
+| Check | Result |
+|---|---|
+| Tracked `.cursor/agents/ecc-*.md` | **68**, all `model: inherit` |
+| Live Task `subagent_type` enum | Cursor built-ins only (see below) |
+| ECC filename (`ecc-planner`, …) in enum | **None** |
+| Frontmatter `name` (`planner`, `code-reviewer`, …) in enum | **None** |
+| Spawn of an ECC specialist | Not attempted (none were spawnable) |
+| Installer re-run | Not done |
+
+Exact Task enum in this session:
+
+- `generalPurpose`
+- `explore`
+- `computerUse`
+- `videoReview`
+- `cursor-guide`
+- `ci-investigator`
+- `best-of-n-runner`
+
+Skills, `AGENTS.md`, and `CLAUDE.md` still loaded. None of the 121 committed
+`.cursor/rules/*.mdc` files appeared in always-applied workspace rules. No
+reinstall was performed.
